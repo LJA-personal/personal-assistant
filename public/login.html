@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home Base — Sign in</title>
+<link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="auth-page">
+
+  <div class="auth-eyebrow"><span class="dot"></span> YOUR TINY ASSISTANT IS STANDING BY</div>
+
+  <div class="auth-card">
+    <h1 class="auth-title" id="formTitle">Welcome back</h1>
+    <p class="auth-sub" id="formSub">Sign in to reach your clock, timer, to-do list, and today's updates.</p>
+
+    <div class="auth-error" id="errorBox"></div>
+    <div class="auth-note" id="noteBox"></div>
+
+    <form id="authForm">
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required />
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required />
+      </div>
+      <button type="submit" class="btn-primary" id="submitBtn">Sign in</button>
+    </form>
+
+    <div class="auth-switch">
+      <span id="switchPrompt">New here?</span>
+      <button type="button" id="switchBtn">Create an account</button>
+    </div>
+  </div>
+
+  <script src="/js/login.js"></script>
+</body>
+</html>

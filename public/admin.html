@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home Base — Admin</title>
+<link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="admin-page">
+
+  <div class="ticker-bar">
+    <div class="ticker-label"><span class="dot"></span> ADMIN</div>
+    <div class="ticker-track"><span class="ticker-item">Manage what every dashboard sees</span></div>
+    <div class="ticker-actions">
+      <button class="icon-btn" onclick="window.location.href='/dashboard'">Back to dashboard</button>
+    </div>
+  </div>
+
+  <main class="admin-shell">
+    <section class="admin-section">
+      <h2>Post an update</h2>
+      <form id="broadcastForm">
+        <div class="form-row">
+          <input type="text" name="message" placeholder="e.g. Trash pickup moved to Thursday this week" required />
+        </div>
+        <div class="form-row">
+          <select name="recurrence">
+            <option value="once">Show once (today, or a chosen date)</option>
+            <option value="daily">Repeat every day</option>
+          </select>
+          <input type="date" name="active_date" title="Date to show this (for 'once' messages). Leave blank for today." />
+        </div>
+        <button type="submit" class="btn-primary" style="width:auto; padding:10px 18px;">Post update</button>
+      </form>
+    </section>
+
+    <section class="admin-section">
+      <h2>Active &amp; scheduled updates</h2>
+      <div id="broadcastList"></div>
+    </section>
+
+    <section class="admin-section">
+      <h2>Weather location</h2>
+      <p style="color:var(--slate); font-size:13px; margin-top:-6px;">Shown in every user's assistant ticker.</p>
+      <form id="weatherForm">
+        <div class="form-row">
+          <input type="text" name="weather_location_name" placeholder="Display name, e.g. San Antonio, TX" style="flex:1; min-width:200px;" />
+        </div>
+        <div class="form-row">
+          <input type="text" name="weather_lat" placeholder="Latitude" />
+          <input type="text" name="weather_lon" placeholder="Longitude" />
+        </div>
+        <button type="submit" class="btn-primary" style="width:auto; padding:10px 18px;">Save location</button>
+      </form>
+    </section>
+
+    <section class="admin-section">
+      <h2>Accounts</h2>
+      <div id="userList" style="font-size:14px; color:var(--paper);"></div>
+    </section>
+  </main>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

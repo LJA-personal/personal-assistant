@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Home Base</title>
+<link rel="stylesheet" href="/css/main.css" />
+</head>
+<body class="dash-page" id="dashBody">
+
+  <div class="ticker-bar">
+    <div class="ticker-label"><span class="dot"></span> ASSISTANT</div>
+    <div class="ticker-track" id="tickerTrack"><span class="ticker-item">Loading today's updates…</span></div>
+    <div class="ticker-actions">
+      <button class="icon-btn" id="adminLink" style="display:none;" onclick="window.location.href='/admin'">Admin</button>
+      <button class="icon-btn" id="settingsBtn">Customize</button>
+      <button class="icon-btn" id="logoutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <main class="dash-main">
+    <div class="dash-header">
+      <div class="dash-greeting" id="greeting">Hello</div>
+    </div>
+
+    <div class="widget-grid">
+      <section class="widget-card" aria-label="Clock">
+        <h2 class="widget-title">Clock</h2>
+        <div class="clock-time" id="clockTime">--:--:--</div>
+        <div class="clock-date" id="clockDate">—</div>
+      </section>
+
+      <section class="widget-card" aria-label="Timer">
+        <h2 class="widget-title">Timer</h2>
+        <div class="timer-display" id="timerDisplay">00:00</div>
+        <div class="timer-controls">
+          <button class="primary" id="timerStartPause">Start</button>
+          <button id="timerReset">Reset</button>
+        </div>
+        <div class="timer-presets">
+          <button data-secs="300">5 min</button>
+          <button data-secs="600">10 min</button>
+          <button data-secs="900">15 min</button>
+          <button data-secs="1500">25 min</button>
+        </div>
+        <div class="timer-custom">
+          <input type="number" id="timerMinInput" min="0" max="999" placeholder="min" aria-label="Minutes" />
+          <input type="number" id="timerSecInput" min="0" max="59" placeholder="sec" aria-label="Seconds" />
+          <button id="timerSetCustom" type="button">Set</button>
+        </div>
+      </section>
+
+      <section class="widget-card" aria-label="To-do list" style="grid-column: span 1;">
+        <h2 class="widget-title">To-do</h2>
+        <form class="todo-form" id="todoForm">
+          <input type="text" id="todoInput" placeholder="Add a task…" maxlength="200" required />
+          <button type="submit">Add</button>
+        </form>
+        <ul class="todo-list" id="todoList"></ul>
+      </section>
+
+      <section class="widget-card" aria-label="Notepad">
+        <h2 class="widget-title">Notepad</h2>
+        <textarea class="notepad-area" id="notepadArea" placeholder="Jot something down…"></textarea>
+        <div class="notepad-status" id="notepadStatus"></div>
+      </section>
+
+      <section class="widget-card wide" aria-label="Calendar">
+        <h2 class="widget-title">Calendar</h2>
+        <div class="cal-header">
+          <button type="button" class="cal-nav-btn" id="calPrev" aria-label="Previous month">‹</button>
+          <div class="cal-month-label" id="calMonthLabel">—</div>
+          <button type="button" class="cal-nav-btn" id="calNext" aria-label="Next month">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-selected-panel">
+          <div class="cal-selected-label" id="calSelectedLabel">—</div>
+          <form class="todo-form" id="calEventForm">
+            <input type="text" id="calEventInput" placeholder="Add something for this day…" maxlength="200" required />
+            <button type="submit">Add</button>
+          </form>
+          <ul class="todo-list" id="calEventList"></ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Settings modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-card">
+      <h2 class="modal-title">Customize your space</h2>
+
+      <div class="field">
+        <label>Background color / gradient</label>
+        <div class="swatch-row" id="bgSwatches"></div>
+      </div>
+
+      <div class="field">
+        <label for="bgUpload">Or upload your own image</label>
+        <input type="file" id="bgUpload" accept="image/png, image/jpeg, image/webp, image/gif" />
+      </div>
+
+      <div class="field">
+        <label>Accent color</label>
+        <div class="swatch-row" id="accentSwatches"></div>
+      </div>
+
+      <div class="field">
+        <label for="clockFormat">Clock format</label>
+        <select id="clockFormat" style="width:100%;">
+          <option value="12h">12-hour</option>
+          <option value="24h">24-hour</option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="closeSettings">Cancel</button>
+        <button class="btn-primary" id="saveSettings" style="width:auto;">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
