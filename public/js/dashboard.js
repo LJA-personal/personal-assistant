@@ -44,9 +44,6 @@ async function init() {
 
   loadNotepad();
   wireNotepad();
-
-  wireCalendar();
-  loadCalendar();
 }
 
 function updateGreeting() {
@@ -364,156 +361,6 @@ function wireNotepad() {
   });
 }
 
-// ---------------- Calendar ----------------
-
-let calMonthDate = new Date();
-calMonthDate.setDate(1);
-let calSelectedDate = toDateStr(new Date());
-let calEventsCache = {};
-
-function toDateStr(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
-
-async function loadCalendar() {
-  const monthKey = `${calMonthDate.getFullYear()}-${String(calMonthDate.getMonth() + 1).padStart(2, '0')}`;
-  const resp = await fetch(`/api/events?month=${monthKey}`);
-  const events = await resp.json();
-
-  calEventsCache = {};
-  events.forEach((ev) => {
-    if (!calEventsCache[ev.event_date]) calEventsCache[ev.event_date] = [];
-    calEventsCache[ev.event_date].push(ev);
-  });
-
-  renderCalendarGrid();
-  renderSelectedDayEvents();
-}
-
-function renderCalendarGrid() {
-  document.getElementById('calMonthLabel').textContent = calMonthDate.toLocaleDateString(undefined, {
-    month: 'long', year: 'numeric',
-  });
-
-  const grid = document.getElementById('calGrid');
-  grid.innerHTML = '';
-
-  ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].forEach((label) => {
-    const el = document.createElement('div');
-    el.className = 'cal-daylabel';
-    el.textContent = label;
-    grid.appendChild(el);
-  });
-
-  const year = calMonthDate.getFullYear();
-  const month = calMonthDate.getMonth();
-  const firstDayOfWeek = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const todayStr = toDateStr(new Date());
-
-  for (let i = 0; i < firstDayOfWeek; i++) {
-    const blank = document.createElement('div');
-    blank.className = 'cal-cell empty';
-    grid.appendChild(blank);
-  }
-
-  for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const cell = document.createElement('button');
-    cell.type = 'button';
-    cell.className = 'cal-cell';
-    if (dateStr === todayStr) cell.classList.add('today');
-    if (dateStr === calSelectedDate) cell.classList.add('selected');
-
-    const num = document.createElement('span');
-    num.textContent = String(day);
-    cell.appendChild(num);
-
-    if (calEventsCache[dateStr] && calEventsCache[dateStr].length > 0) {
-      const dot = document.createElement('span');
-      dot.className = 'cal-dot';
-      cell.appendChild(dot);
-    }
-
-    cell.addEventListener('click', () => {
-      calSelectedDate = dateStr;
-      renderCalendarGrid();
-      renderSelectedDayEvents();
-    });
-
-    grid.appendChild(cell);
-  }
-}
-
-function renderSelectedDayEvents() {
-  const dateObj = new Date(`${calSelectedDate}T00:00:00`);
-  document.getElementById('calSelectedLabel').textContent = dateObj.toLocaleDateString(undefined, {
-    weekday: 'long', month: 'long', day: 'numeric',
-  });
-
-  const list = document.getElementById('calEventList');
-  list.innerHTML = '';
-  const items = calEventsCache[calSelectedDate] || [];
-
-  if (items.length === 0) {
-    const li = document.createElement('li');
-    li.className = 'todo-empty';
-    li.textContent = 'Nothing set for this day.';
-    list.appendChild(li);
-    return;
-  }
-
-  items.forEach((ev) => {
-    const li = document.createElement('li');
-    li.className = 'todo-item';
-
-    const span = document.createElement('span');
-    span.className = 'todo-text';
-    span.textContent = ev.text;
-
-    const del = document.createElement('button');
-    del.className = 'todo-del';
-    del.textContent = '✕';
-    del.setAttribute('aria-label', 'Delete event');
-    del.addEventListener('click', async () => {
-      await fetch(`/api/events/${ev.id}`, { method: 'DELETE' });
-      loadCalendar();
-    });
-
-    li.append(span, del);
-    list.appendChild(li);
-  });
-}
-
-function wireCalendar() {
-  document.getElementById('calPrev').addEventListener('click', () => {
-    calMonthDate.setMonth(calMonthDate.getMonth() - 1);
-    loadCalendar();
-  });
-
-  document.getElementById('calNext').addEventListener('click', () => {
-    calMonthDate.setMonth(calMonthDate.getMonth() + 1);
-    loadCalendar();
-  });
-
-  document.getElementById('calEventForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const input = document.getElementById('calEventInput');
-    const text = input.value.trim();
-    if (!text) return;
-    await fetch('/api/events', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event_date: calSelectedDate, text }),
-    });
-    input.value = '';
-    loadCalendar();
-  });
-}
-
 // ---------------- Assistant ticker ----------------
 
 let tickerItems = [];
@@ -524,17 +371,21 @@ async function loadAssistant() {
     const resp = await fetch('/api/assistant');
     const data = await resp.json();
 
-    const items = [];
+    const items = [{ type: 'time' }];
+
     const dateStr = new Date(data.date).toLocaleDateString(undefined, {
       weekday: 'long', month: 'long', day: 'numeric',
     });
-    items.push(`Today is ${dateStr}.`);
+    items.push({ type: 'date', text: `Today is ${dateStr}.` });
 
     if (data.weather && data.weather.tempF !== null && data.weather.tempF !== undefined) {
-      items.push(`${data.weather.location}: ${data.weather.tempF}°F, ${data.weather.condition}.`);
+      items.push({
+        type: 'weather',
+        text: `${data.weather.location}: ${data.weather.tempF}°F, ${data.weather.condition}.`,
+      });
     }
 
-    data.broadcasts.forEach((b) => items.push(b.message));
+    data.broadcasts.forEach((b) => items.push({ type: 'broadcast', text: b.message }));
 
     tickerItems = items;
     tickerIndex = 0;
@@ -544,13 +395,38 @@ async function loadAssistant() {
   }
 }
 
+function formatTickerTime() {
+  const now = new Date();
+  const format = (currentSettings && currentSettings.clock_format) || '12h';
+  let h = now.getHours();
+  let suffix = '';
+  if (format === '12h') {
+    suffix = h >= 12 ? ' PM' : ' AM';
+    h = h % 12 || 12;
+  }
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  return `It's ${h}:${mm}${suffix} right now.`;
+}
+
 function renderTickerItem() {
   const track = document.getElementById('tickerTrack');
   if (tickerItems.length === 0) {
     track.innerHTML = '<span class="ticker-item">All quiet for now.</span>';
     return;
   }
-  track.innerHTML = `<span class="ticker-item">${escapeHtml(tickerItems[tickerIndex])}</span>`;
+  const item = tickerItems[tickerIndex];
+  const text = item.type === 'time' ? formatTickerTime() : item.text;
+  track.innerHTML = `<span class="ticker-item">${escapeHtml(text)}</span>`;
+  bounceBot();
+}
+
+function bounceBot() {
+  const bot = document.getElementById('tickerBot');
+  if (!bot) return;
+  bot.classList.remove('bounce');
+  void bot.offsetWidth; // restart animation if it's already mid-bounce
+  bot.classList.add('bounce');
+  setTimeout(() => bot.classList.remove('bounce'), 600);
 }
 
 function escapeHtml(str) {
@@ -564,5 +440,15 @@ setInterval(() => {
   tickerIndex = (tickerIndex + 1) % tickerItems.length;
   renderTickerItem();
 }, 6000);
+
+// Keep a displayed live-clock item ticking even between full rotations
+setInterval(() => {
+  if (tickerItems.length === 0) return;
+  const item = tickerItems[tickerIndex];
+  if (item && item.type === 'time') {
+    const span = document.querySelector('#tickerTrack .ticker-item');
+    if (span) span.textContent = formatTickerTime();
+  }
+}, 15000);
 
 init();

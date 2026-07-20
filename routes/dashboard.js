@@ -158,45 +158,6 @@ router.put('/notepad', requireAuth, (req, res) => {
   res.json(db.prepare('SELECT * FROM notepad WHERE user_id = ?').get(req.session.userId));
 });
 
-// ---- Calendar events (per-user, tied to a specific date) ----
-
-router.get('/events', requireAuth, (req, res) => {
-  const { month } = req.query; // expected 'YYYY-MM'
-  let rows;
-  if (month && /^\d{4}-\d{2}$/.test(month)) {
-    rows = db
-      .prepare('SELECT * FROM events WHERE user_id = ? AND event_date LIKE ? ORDER BY event_date ASC, id ASC')
-      .all(req.session.userId, `${month}-%`);
-  } else {
-    rows = db
-      .prepare('SELECT * FROM events WHERE user_id = ? ORDER BY event_date ASC, id ASC')
-      .all(req.session.userId);
-  }
-  res.json(rows);
-});
-
-router.post('/events', requireAuth, (req, res) => {
-  const { event_date, text } = req.body || {};
-  if (!event_date || !/^\d{4}-\d{2}-\d{2}$/.test(event_date)) {
-    return res.status(400).json({ error: 'A valid date is required.' });
-  }
-  if (!text || !text.trim()) {
-    return res.status(400).json({ error: 'Event text is required.' });
-  }
-  const info = db
-    .prepare('INSERT INTO events (user_id, event_date, text) VALUES (?, ?, ?)')
-    .run(req.session.userId, event_date, text.trim());
-  res.json(db.prepare('SELECT * FROM events WHERE id = ?').get(info.lastInsertRowid));
-});
-
-router.delete('/events/:id', requireAuth, (req, res) => {
-  const result = db
-    .prepare('DELETE FROM events WHERE id = ? AND user_id = ?')
-    .run(req.params.id, req.session.userId);
-  if (result.changes === 0) return res.status(404).json({ error: 'Event not found.' });
-  res.json({ ok: true });
-});
-
 // ---- Assistant feed (broadcasts + weather + date) shared across all users ----
 
 router.get('/assistant', requireAuth, async (req, res) => {

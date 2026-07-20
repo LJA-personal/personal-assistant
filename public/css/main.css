@@ -9,6 +9,7 @@
   --slate: #8891a0;
   --danger: #c05746;
   --success: #4c9a6a;
+  --lavender: #8c86c9;
 
   --font-display: 'Fraunces', serif;
   --font-body: 'Inter', system-ui, sans-serif;
@@ -16,6 +17,7 @@
 
   --radius: 14px;
   --shadow-card: 0 10px 30px rgba(10, 12, 18, 0.25);
+  --grain: radial-gradient(rgba(245, 242, 234, 0.05) 1px, transparent 1px);
 }
 
 * { box-sizing: border-box; }
@@ -76,7 +78,7 @@ a { color: inherit; }
 /* ---------------- Login / Register ---------------- */
 
 body.auth-page {
-  background: var(--ink);
+  background-color: var(--ink);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -84,8 +86,10 @@ body.auth-page {
   justify-content: center;
   padding: 24px;
   background-image:
-    radial-gradient(circle at 15% 20%, rgba(201, 138, 62, 0.08), transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(43, 111, 106, 0.15), transparent 50%);
+    radial-gradient(circle at 15% 20%, rgba(201, 138, 62, 0.1), transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(43, 111, 106, 0.18), transparent 50%),
+    var(--grain);
+  background-size: auto, auto, 24px 24px;
 }
 
 .auth-eyebrow {
@@ -109,6 +113,43 @@ body.auth-page {
   animation: pulse 2.4s infinite;
 }
 
+.bot {
+  flex-shrink: 0;
+  animation: botFloat 3.2s ease-in-out infinite;
+  transform-origin: center bottom;
+  overflow: visible;
+}
+
+@keyframes botFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+.bot.bounce {
+  animation: botBounce 0.55s ease;
+}
+
+@keyframes botBounce {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-7px) scale(1.06); }
+  60% { transform: translateY(0) scale(0.96); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.bot-eye {
+  animation: botBlink 4.8s infinite;
+  transform-origin: center;
+}
+
+@keyframes botBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.1); }
+}
+
+.bot-antenna-tip {
+  animation: pulse 2.4s infinite;
+}
+
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(201, 138, 62, 0.55); }
   70% { box-shadow: 0 0 0 8px rgba(201, 138, 62, 0); }
@@ -118,11 +159,14 @@ body.auth-page {
 .auth-card {
   width: 100%;
   max-width: 400px;
-  background: var(--ink-soft);
+  background-color: var(--ink-soft);
+  background-image: var(--grain);
+  background-size: 20px 20px;
   border: 1px solid rgba(245, 242, 234, 0.08);
   border-radius: var(--radius);
   padding: 36px 32px;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(245, 242, 234, 0.06);
+  position: relative;
 }
 
 .auth-title {
@@ -171,16 +215,22 @@ body.auth-page {
   padding: 12px;
   border-radius: 8px;
   border: none;
-  background: var(--brass);
+  background: linear-gradient(180deg, #dc9f52, var(--brass));
   color: var(--ink);
   font-weight: 600;
   font-size: 15px;
   cursor: pointer;
-  transition: transform 0.12s ease, background 0.12s ease;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.25) inset, 0 6px 16px rgba(201, 138, 62, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
 }
 
-.btn-primary:hover { background: #d99a4f; }
-.btn-primary:active { transform: scale(0.98); }
+.btn-primary:hover {
+  background: linear-gradient(180deg, #e4a95d, #d99a4f);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.3) inset, 0 8px 20px rgba(201, 138, 62, 0.32);
+}
+
+.btn-primary:active { transform: translateY(0) scale(0.98); }
 
 .auth-switch {
   margin-top: 20px;
@@ -260,12 +310,6 @@ body.dash-page {
   flex-shrink: 0;
 }
 
-.ticker-label .dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--brass);
-  animation: pulse 2.4s infinite;
-}
-
 .ticker-track {
   flex: 1;
   overflow: hidden;
@@ -300,9 +344,15 @@ body.dash-page {
   font-size: 12px;
   font-family: var(--font-body);
   cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease;
 }
 
-.icon-btn:hover { background: rgba(245, 242, 234, 0.16); }
+.icon-btn:hover {
+  background: rgba(245, 242, 234, 0.16);
+  transform: translateY(-1px);
+}
+
+.icon-btn:active { transform: translateY(0); }
 
 .dash-main {
   max-width: 1080px;
@@ -326,6 +376,14 @@ body.dash-page {
   text-shadow: 0 2px 12px rgba(0,0,0,0.4);
 }
 
+.dash-greeting-rule {
+  width: 54px;
+  height: 3px;
+  margin-top: 10px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brass), transparent);
+}
+
 .widget-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -334,15 +392,32 @@ body.dash-page {
 }
 
 .widget-card {
-  background: rgba(22, 26, 34, 0.6);
+  background-color: rgba(22, 26, 34, 0.6);
+  background-image: var(--grain);
+  background-size: 20px 20px;
   backdrop-filter: blur(14px);
   border: 1px solid rgba(245, 242, 234, 0.12);
   border-radius: var(--radius);
   padding: 22px;
-  box-shadow: var(--shadow-card);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(245, 242, 234, 0.05);
   container-type: inline-size;
   min-width: 0;
+  position: relative;
+  overflow: hidden;
 }
+
+.widget-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  opacity: 0.85;
+}
+
+.widget-card.accent-brass::before { background: linear-gradient(90deg, var(--brass), transparent 85%); }
+.widget-card.accent-teal::before { background: linear-gradient(90deg, var(--teal), transparent 85%); }
+.widget-card.accent-success::before { background: linear-gradient(90deg, var(--success), transparent 85%); }
+.widget-card.accent-lavender::before { background: linear-gradient(90deg, var(--lavender), transparent 85%); }
 
 @media (min-width: 640px) {
   .widget-card.wide { grid-column: span 2; }
@@ -354,6 +429,14 @@ body.dash-page {
   text-transform: uppercase;
   color: var(--slate);
   margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.wicon {
+  flex-shrink: 0;
+  opacity: 0.9;
 }
 
 /* Clock */
@@ -478,7 +561,17 @@ body.dash-page {
   gap: 6px;
   max-height: 280px;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 138, 62, 0.45) transparent;
 }
+
+.todo-list::-webkit-scrollbar { width: 6px; }
+.todo-list::-webkit-scrollbar-track { background: transparent; }
+.todo-list::-webkit-scrollbar-thumb {
+  background: rgba(201, 138, 62, 0.4);
+  border-radius: 10px;
+}
+.todo-list::-webkit-scrollbar-thumb:hover { background: rgba(201, 138, 62, 0.6); }
 
 .todo-item {
   display: flex;
@@ -539,107 +632,6 @@ body.dash-page {
   height: 14px;
 }
 
-/* Calendar */
-.cal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 14px;
-}
-
-.cal-nav-btn {
-  background: rgba(245, 242, 234, 0.08);
-  border: 1px solid rgba(245, 242, 234, 0.16);
-  color: var(--paper);
-  border-radius: 7px;
-  padding: 6px 12px;
-  font-size: 15px;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.cal-nav-btn:hover { background: rgba(245, 242, 234, 0.16); }
-
-.cal-month-label {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 600;
-}
-
-.cal-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-  margin-bottom: 18px;
-}
-
-.cal-daylabel {
-  text-align: center;
-  font-size: 11px;
-  color: var(--slate);
-  padding: 4px 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.cal-cell {
-  position: relative;
-  aspect-ratio: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(245, 242, 234, 0.04);
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: var(--paper);
-  font-size: 13px;
-  font-family: var(--font-body);
-  cursor: pointer;
-  padding: 0;
-}
-
-.cal-cell.empty {
-  background: transparent;
-  cursor: default;
-}
-
-.cal-cell:not(.empty):hover {
-  background: rgba(245, 242, 234, 0.12);
-}
-
-.cal-cell.today {
-  border-color: var(--brass);
-  font-weight: 700;
-}
-
-.cal-cell.selected {
-  background: var(--teal);
-}
-
-.cal-dot {
-  position: absolute;
-  bottom: 5px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--brass);
-}
-
-.cal-cell.selected .cal-dot {
-  background: var(--paper);
-}
-
-.cal-selected-panel {
-  border-top: 1px solid rgba(245, 242, 234, 0.08);
-  padding-top: 16px;
-}
-
-.cal-selected-label {
-  font-size: 13px;
-  color: var(--slate);
-  margin-bottom: 12px;
-}
-
 /* Settings panel */
 .modal-overlay {
   position: fixed;
@@ -655,7 +647,9 @@ body.dash-page {
 .modal-overlay.show { display: flex; }
 
 .modal-card {
-  background: var(--ink-soft);
+  background-color: var(--ink-soft);
+  background-image: var(--grain);
+  background-size: 20px 20px;
   border-radius: var(--radius);
   padding: 28px;
   width: 100%;
@@ -663,6 +657,7 @@ body.dash-page {
   max-height: 88vh;
   overflow-y: auto;
   border: 1px solid rgba(245, 242, 234, 0.1);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(245, 242, 234, 0.06);
 }
 
 .modal-title {
@@ -680,12 +675,32 @@ body.dash-page {
 
 .swatch {
   width: 36px; height: 36px;
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: 2px solid rgba(245, 242, 234, 0.15);
+  position: relative;
+  transition: transform 0.15s ease, border-color 0.15s ease;
 }
 
-.swatch.selected { border-color: var(--paper); }
+.swatch:hover { transform: scale(1.08); }
+
+.swatch.selected {
+  border-color: var(--paper);
+  box-shadow: 0 0 0 2px rgba(245, 242, 234, 0.15);
+}
+
+.swatch.selected::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+}
 
 .modal-footer {
   display: flex;
@@ -702,12 +717,22 @@ body.dash-page {
   padding: 10px 16px;
   cursor: pointer;
   font-size: 14px;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.btn-secondary:hover {
+  background: rgba(245, 242, 234, 0.14);
+  transform: translateY(-1px);
 }
 
 /* Admin page */
 body.admin-page {
-  background: var(--ink);
+  background-color: var(--ink);
   min-height: 100vh;
+  background-image:
+    radial-gradient(circle at 85% 10%, rgba(43, 111, 106, 0.14), transparent 45%),
+    var(--grain);
+  background-size: auto, 24px 24px;
 }
 
 .admin-shell {
@@ -717,11 +742,14 @@ body.admin-page {
 }
 
 .admin-section {
-  background: var(--ink-soft);
+  background-color: var(--ink-soft);
+  background-image: var(--grain);
+  background-size: 20px 20px;
   border: 1px solid rgba(245,242,234,0.08);
   border-radius: var(--radius);
   padding: 24px;
   margin-bottom: 24px;
+  box-shadow: 0 8px 22px rgba(10, 12, 18, 0.2), inset 0 1px 0 rgba(245, 242, 234, 0.05);
 }
 
 .admin-section h2 {

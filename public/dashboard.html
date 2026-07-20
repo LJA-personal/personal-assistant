@@ -9,7 +9,16 @@
 <body class="dash-page" id="dashBody">
 
   <div class="ticker-bar">
-    <div class="ticker-label"><span class="dot"></span> ASSISTANT</div>
+    <div class="ticker-label">
+      <svg class="bot" id="tickerBot" viewBox="0 0 40 40" width="26" height="26" aria-hidden="true">
+        <line x1="20" y1="4" x2="20" y2="10" stroke="#c98a3e" stroke-width="2" stroke-linecap="round" />
+        <circle class="bot-antenna-tip" cx="20" cy="4" r="2.5" fill="#c98a3e" />
+        <rect x="6" y="10" width="28" height="22" rx="10" fill="#2b6f6a" stroke="rgba(245,242,234,0.3)" stroke-width="1" />
+        <circle class="bot-eye" cx="16" cy="21" r="2.6" fill="#f5f2ea" />
+        <circle class="bot-eye" cx="24" cy="21" r="2.6" fill="#f5f2ea" />
+      </svg>
+      ASSISTANT
+    </div>
     <div class="ticker-track" id="tickerTrack"><span class="ticker-item">Loading today's updates…</span></div>
     <div class="ticker-actions">
       <button class="icon-btn" id="adminLink" style="display:none;" onclick="window.location.href='/admin'">Admin</button>
@@ -20,18 +29,27 @@
 
   <main class="dash-main">
     <div class="dash-header">
-      <div class="dash-greeting" id="greeting">Hello</div>
+      <div>
+        <div class="dash-greeting" id="greeting">Hello</div>
+        <div class="dash-greeting-rule"></div>
+      </div>
     </div>
 
     <div class="widget-grid">
-      <section class="widget-card" aria-label="Clock">
-        <h2 class="widget-title">Clock</h2>
+      <section class="widget-card accent-brass" aria-label="Clock">
+        <h2 class="widget-title">
+          <svg class="wicon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#c98a3e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Clock
+        </h2>
         <div class="clock-time" id="clockTime">--:--:--</div>
         <div class="clock-date" id="clockDate">—</div>
       </section>
 
-      <section class="widget-card" aria-label="Timer">
-        <h2 class="widget-title">Timer</h2>
+      <section class="widget-card accent-teal" aria-label="Timer">
+        <h2 class="widget-title">
+          <svg class="wicon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2b6f6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="9" y1="2" x2="15" y2="2"/><line x1="12" y1="2" x2="12" y2="4"/></svg>
+          Timer
+        </h2>
         <div class="timer-display" id="timerDisplay">00:00</div>
         <div class="timer-controls">
           <button class="primary" id="timerStartPause">Start</button>
@@ -50,8 +68,11 @@
         </div>
       </section>
 
-      <section class="widget-card" aria-label="To-do list" style="grid-column: span 1;">
-        <h2 class="widget-title">To-do</h2>
+      <section class="widget-card accent-success" aria-label="To-do list" style="grid-column: span 1;">
+        <h2 class="widget-title">
+          <svg class="wicon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#4c9a6a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          To-do
+        </h2>
         <form class="todo-form" id="todoForm">
           <input type="text" id="todoInput" placeholder="Add a task…" maxlength="200" required />
           <button type="submit">Add</button>
@@ -59,28 +80,13 @@
         <ul class="todo-list" id="todoList"></ul>
       </section>
 
-      <section class="widget-card" aria-label="Notepad">
-        <h2 class="widget-title">Notepad</h2>
+      <section class="widget-card accent-lavender" aria-label="Notepad">
+        <h2 class="widget-title">
+          <svg class="wicon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8c86c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+          Notepad
+        </h2>
         <textarea class="notepad-area" id="notepadArea" placeholder="Jot something down…"></textarea>
         <div class="notepad-status" id="notepadStatus"></div>
-      </section>
-
-      <section class="widget-card wide" aria-label="Calendar">
-        <h2 class="widget-title">Calendar</h2>
-        <div class="cal-header">
-          <button type="button" class="cal-nav-btn" id="calPrev" aria-label="Previous month">‹</button>
-          <div class="cal-month-label" id="calMonthLabel">—</div>
-          <button type="button" class="cal-nav-btn" id="calNext" aria-label="Next month">›</button>
-        </div>
-        <div class="cal-grid" id="calGrid"></div>
-        <div class="cal-selected-panel">
-          <div class="cal-selected-label" id="calSelectedLabel">—</div>
-          <form class="todo-form" id="calEventForm">
-            <input type="text" id="calEventInput" placeholder="Add something for this day…" maxlength="200" required />
-            <button type="submit">Add</button>
-          </form>
-          <ul class="todo-list" id="calEventList"></ul>
-        </div>
       </section>
     </div>
   </main>

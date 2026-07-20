@@ -3,10 +3,9 @@
 A small Node.js/Express app you run on one Windows computer. Anyone on your
 network can browse to it, log in (or create their own account), and get a
 personal page with a clock, a timer (presets or any custom duration), a
-to-do list, a notepad, a personal calendar for date-specific notes, and a
-customizable background. A sticky bar at the top — the "assistant" — shows
-things every user sees: today's date, local weather, and any reminders or
-updates you (the admin) post.
+to-do list, a notepad, and a customizable background. A sticky bar at the
+top — the "assistant" — shows things every user sees: today's date, local
+weather, and any reminders or updates you (the admin) post.
 
 Everything is stored in one SQLite file on the host computer. No cloud
 service, no separate database server required.
